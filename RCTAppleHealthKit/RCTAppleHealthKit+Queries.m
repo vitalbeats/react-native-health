@@ -1113,7 +1113,7 @@
                                                      HKObserverQueryCompletionHandler completionHandler,
                                                      NSError * _Nullable error) {
 
-        NSLog(@"[HealthKit] New sample received from Apple HealthKit - %@:%@", bundleIdentifier, type);
+        NSLog(@"[HealthKit] New sample received from Apple HealthKit - :%@",, type);
 
         NSString *successEvent = [NSString stringWithFormat:@"healthKit:%@:new", type];
         NSString *failureEvent = [NSString stringWithFormat:@"healthKit:%@:failure", type];
