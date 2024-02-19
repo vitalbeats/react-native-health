@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '14.0'
   s.swift_version = '5.5'
 
-  s.source_files = ['v2/RNHealthKitCore/ReactNativeBridge/**/*', 'v2/RNHealthKitCore/HealthKitCore/**/*.swift']
+  s.source_files = ['RCTAppleHealthKit/**/*', 'v2/RNHealthKitCore/ReactNativeBridge/**/*', 'v2/RNHealthKitCore/HealthKitCore/**/*.swift']
   s.requires_arc = true
 
   s.frameworks = ['HealthKit']
