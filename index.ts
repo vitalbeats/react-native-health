@@ -29,6 +29,8 @@ interface RNHealthKit {
     totalDistance?: number
     metadata?: WorkoutMetadata
   }): Promise<boolean>
+
+  Constants: Constants
 }
 
 export interface HealthKitPermissions {
