@@ -12,6 +12,36 @@
 
 @implementation RCTAppleHealthKit (Methods_Vitals)
 
+
+- (NSArray*) symptomsIdentiers {
+    return @[HKCategoryTypeIdentifierAbdominalCramps, HKCategoryTypeIdentifierBloating, HKCategoryTypeIdentifierConstipation, HKCategoryTypeIdentifierDiarrhea, HKCategoryTypeIdentifierHeartburn, HKCategoryTypeIdentifierNausea, HKCategoryTypeIdentifierVomiting, HKCategoryTypeIdentifierAppetiteChanges, HKCategoryTypeIdentifierChills, HKCategoryTypeIdentifierDizziness, HKCategoryTypeIdentifierFainting, HKCategoryTypeIdentifierFatigue, HKCategoryTypeIdentifierFever, HKCategoryTypeIdentifierGeneralizedBodyAche, HKCategoryTypeIdentifierHotFlashes, HKCategoryTypeIdentifierChestTightnessOrPain, HKCategoryTypeIdentifierCoughing, HKCategoryTypeIdentifierRapidPoundingOrFlutteringHeartbeat, HKCategoryTypeIdentifierShortnessOfBreath, HKCategoryTypeIdentifierSkippedHeartbeat, HKCategoryTypeIdentifierWheezing, HKCategoryTypeIdentifierLowerBackPain, HKCategoryTypeIdentifierHeadache, HKCategoryTypeIdentifierMemoryLapse, HKCategoryTypeIdentifierMoodChanges, HKCategoryTypeIdentifierLossOfSmell, HKCategoryTypeIdentifierLossOfTaste, HKCategoryTypeIdentifierRunnyNose, HKCategoryTypeIdentifierSoreThroat, HKCategoryTypeIdentifierSinusCongestion, HKCategoryTypeIdentifierBreastPain, HKCategoryTypeIdentifierPelvicPain, HKCategoryTypeIdentifierVaginalDryness, HKCategoryTypeIdentifierAcne, HKCategoryTypeIdentifierDrySkin, HKCategoryTypeIdentifierHairLoss, HKCategoryTypeIdentifierNightSweats, HKCategoryTypeIdentifierSleepChanges, HKCategoryTypeIdentifierBladderIncontinence];
+}
+
+- (NSString*)classificationFor:(NSString *)ecgClassification {
+    NSDictionary *classificationsDic = [NSDictionary dictionaryWithObjectsAndKeys:@"NotSet", [@(HKElectrocardiogramClassificationNotSet) stringValue], @"AttrialFibrilation", [@(HKElectrocardiogramClassificationAtrialFibrillation) stringValue], @"SinusRhytm", [@(HKElectrocardiogramClassificationSinusRhythm) stringValue], @"InconclusiveLowHeartRate", [@(HKElectrocardiogramClassificationInconclusiveLowHeartRate) stringValue], @"InconclusiveHighHeartRate", [@(HKElectrocardiogramClassificationInconclusiveHighHeartRate) stringValue], @"InconclusivePoorReading", [@(HKElectrocardiogramClassificationInconclusivePoorReading) stringValue], @"InconclusiveOther", [@(HKElectrocardiogramClassificationInconclusiveOther) stringValue], nil];
+
+    NSString *classification = [classificationsDic objectForKey:ecgClassification];
+
+    if (classification == nil) {
+        classification = @"Unrecognized";
+    }
+
+    return classification;
+}
+
+
+- (NSString*) symptomForIdentifier:(NSString *)identifier {
+    NSDictionary *categoryIdentifiers = [NSDictionary dictionaryWithObjectsAndKeys:@"AbdominalCramps", HKCategoryTypeIdentifierAbdominalCramps, @"Bloating", HKCategoryTypeIdentifierBloating, @"Constipation", HKCategoryTypeIdentifierConstipation, @"Diarrhea", HKCategoryTypeIdentifierDiarrhea, @"Heartburn", HKCategoryTypeIdentifierHeartburn, @"Nausea", HKCategoryTypeIdentifierNausea, @"Vomiting", HKCategoryTypeIdentifierVomiting, @"AppetiteChanges", HKCategoryTypeIdentifierAppetiteChanges, @"Chills", HKCategoryTypeIdentifierChills, @"Dizziness", HKCategoryTypeIdentifierDizziness, @"Fainting", HKCategoryTypeIdentifierFainting, @"Fatigue", HKCategoryTypeIdentifierFatigue, @"Fever", HKCategoryTypeIdentifierFever, @"GeneralizedBodyAche", HKCategoryTypeIdentifierGeneralizedBodyAche, @"HotFlashes", HKCategoryTypeIdentifierHotFlashes, @"ChestTightnessOrPain", HKCategoryTypeIdentifierChestTightnessOrPain, @"Coughing", HKCategoryTypeIdentifierCoughing, @"RapidPoundingOrFlutteringHeartbeat", HKCategoryTypeIdentifierRapidPoundingOrFlutteringHeartbeat, @"ShortnessOfBreath", HKCategoryTypeIdentifierShortnessOfBreath, @"SkippedHeartbeat", HKCategoryTypeIdentifierSkippedHeartbeat, @"Wheezing", HKCategoryTypeIdentifierWheezing, @"LowerBackPain", HKCategoryTypeIdentifierLowerBackPain, @"Headache", HKCategoryTypeIdentifierHeadache, @"MemoryLapse", HKCategoryTypeIdentifierMemoryLapse, @"MoodChanges", HKCategoryTypeIdentifierMoodChanges, @"LossOfSmell", HKCategoryTypeIdentifierLossOfSmell, @"LossOfTaste", HKCategoryTypeIdentifierLossOfTaste, @"RunnyNose", HKCategoryTypeIdentifierRunnyNose, @"SoreThroat", HKCategoryTypeIdentifierSoreThroat, @"SinusCongestion", HKCategoryTypeIdentifierSinusCongestion, @"BreastPain", HKCategoryTypeIdentifierBreastPain, @"PelvicPain", HKCategoryTypeIdentifierPelvicPain, @"VaginalDryness", HKCategoryTypeIdentifierVaginalDryness, @"Acne", HKCategoryTypeIdentifierAcne, @"DrySkin", HKCategoryTypeIdentifierDrySkin, @"HairLoss", HKCategoryTypeIdentifierHairLoss, @"NightSweats", HKCategoryTypeIdentifierNightSweats, @"SleepChanges", HKCategoryTypeIdentifierSleepChanges, @"BladderIncontinence", HKCategoryTypeIdentifierBladderIncontinence, nil];
+
+    NSString *symptom = [categoryIdentifiers objectForKey:identifier];
+
+    if (symptom == nil) {
+        symptom = @"none";
+    }
+
+    return symptom;
+}
+
 - (void)vitals_saveHeartRateSample:(NSDictionary *)input callback:(RCTResponseSenderBlock)callback
 {
     NSDate *timeHeartRateSampleWasTaken = [RCTAppleHealthKit dateFromOptions:input key:@"date" withDefault:[NSDate date]];
@@ -533,14 +563,18 @@
              }
 
              __block NSUInteger samplesProcessed = 0;
+             __block NSUInteger symptomsProcessed = 0;
+             __block BOOL hasCompletedSymptoms = FALSE;
+             
              NSMutableArray *data = [NSMutableArray arrayWithCapacity:1];
+             NSUInteger symptomsIdentfierCount = [[self symptomsIdentiers] count];
 
              // create a function that check the progress of processing the samples
              // and executes the callback with the data whan done
              void (^maybeFinish)(void);
              maybeFinish =  ^() {
                  // check to see if we've processed all of the returned samples, and return if so
-                 if (samplesProcessed == results.count) {
+                 if (samplesProcessed == results.count && hasCompletedSymptoms == TRUE) {
                      callback(@[[NSNull null], data]);
                  }
              };
@@ -549,32 +583,7 @@
                  NSString *startDateString = [RCTAppleHealthKit buildISO8601StringFromDate:sample.startDate];
                  NSString *endDateString = [RCTAppleHealthKit buildISO8601StringFromDate:sample.endDate];
                  
-                 NSString *classification;
-                 switch(sample.classification) {
-                     case(HKElectrocardiogramClassificationNotSet):
-                         classification = @"NotSet";
-                         break;
-                     case(HKElectrocardiogramClassificationSinusRhythm):
-                         classification = @"SinusRhythm";
-                         break;
-                     case(HKElectrocardiogramClassificationAtrialFibrillation):
-                         classification = @"AtrialFibrillation";
-                         break;
-                     case(HKElectrocardiogramClassificationInconclusiveLowHeartRate):
-                         classification = @"InconclusiveLowHeartRate";
-                         break;
-                     case(HKElectrocardiogramClassificationInconclusiveHighHeartRate):
-                         classification = @"InconclusiveHighHeartRate";
-                         break;
-                     case(HKElectrocardiogramClassificationInconclusivePoorReading):
-                         classification = @"InconclusivePoorReading";
-                         break;
-                     case(HKElectrocardiogramClassificationInconclusiveOther):
-                         classification = @"InconclusiveOther";
-                         break;
-                     default:
-                         classification = @"Unrecognized";
-                 }
+                 NSString *classification = [self classificationFor:[@(sample.classification) stringValue]];
                  
                  HKUnit *count = [HKUnit countUnit];
                  HKUnit *minute = [HKUnit minuteUnit];
@@ -592,6 +601,7 @@
                       @"samplingFrequency": @([sample.samplingFrequency doubleValueForUnit:HKUnit.hertzUnit]),
                       @"device": [[sample sourceRevision] productType],
                       @"algorithmVersion": @([[sample metadata][HKMetadataKeyAppleECGAlgorithmVersion] intValue]),
+                      @"symptomStatus": @[],
                       @"voltageMeasurements": @[]
                   };
                  NSMutableDictionary *mutableElem = [elem mutableCopy];
@@ -627,6 +637,45 @@
                  HKElectrocardiogramQuery *voltageQuery = [[HKElectrocardiogramQuery alloc] initWithElectrocardiogram:sample
                                                                                                         dataHandler:dataHandler];
                  [self.healthStore executeQuery:voltageQuery];
+                 
+                 // now defined the data handler for the symptoms
+                 if ([sample symptomsStatus] == HKElectrocardiogramSymptomsStatusPresent) {
+
+                     // create an array to hold the ecg symptoms data which will be fetched asynchronously from healthkit
+                     NSMutableArray *symptoms = [NSMutableArray arrayWithCapacity:symptomsIdentfierCount];
+
+                     for (NSString *symptom in [self symptomsIdentiers]) {
+                         void (^symptomsHandler)(HKSampleQuery *query, NSArray *ersults, NSError *error);
+
+                         HKSampleType *sampleType = [HKSampleType categoryTypeForIdentifier:symptom];
+                         NSPredicate *predicate = [HKQuery predicateForObjectsAssociatedWithElectrocardiogram:sample];
+
+                         symptomsHandler = ^(HKSampleQuery *query, NSArray *results, NSError *error) {
+                             symptomsProcessed += 1;
+
+                             if (error == nil) {
+                                 if ([results count] > 0) {
+                                     NSString *symptomName = [self symptomForIdentifier:[[query objectType] description]];
+                                     [symptoms addObject:symptomName];
+                                 }
+                             }
+
+                             if (symptomsProcessed == symptomsIdentfierCount) {
+                                 [mutableElem setObject:symptoms forKey:@"symptomStatus"];
+                                 maybeFinish();
+                             }
+                         };
+
+                         HKSampleQuery *query = [[HKSampleQuery alloc] initWithSampleType:sampleType predicate:predicate limit:HKObjectQueryNoLimit sortDescriptors:nil resultsHandler:symptomsHandler];
+
+                         [self.healthStore executeQuery:query];
+                     }
+                 } else {
+                         symptomsProcessed = symptomsIdentfierCount;
+                         hasCompletedSymptoms = TRUE;
+                         maybeFinish();
+                 }
+                 
              }
          };
 
