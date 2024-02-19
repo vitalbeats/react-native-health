@@ -2,89 +2,77 @@ import { NativeModules } from 'react-native'
 const { RNHealthKitWrapper } = NativeModules
 
 interface RNHealthKit {
-  initHealthKit(
-    read: HealthType[],
-    write: HealthType[],
-  ): Promise<boolean>;
+  initHealthKit(read: HealthType[], write: HealthType[]): Promise<boolean>
 
-  getQuantitySamples(
-    query: QuantitySamplesQuery
-  ): Promise<QuantitySample[]>;
+  getQuantitySamples(query: QuantitySamplesQuery): Promise<QuantitySample[]>
 
-  saveQuantitySample(
-    type: HealthType,
-    sample: QuantitySample
-  ): Promise<boolean>;
+  saveQuantitySample(type: HealthType, sample: QuantitySample): Promise<boolean>
 
   getQuantitySamplesStatistics(
-    query: QuantitySamplesStatisticsQuery
-  ): Promise<QuantitySamplesStatistics[]>;
+    query: QuantitySamplesStatisticsQuery,
+  ): Promise<QuantitySamplesStatistics[]>
 
-  getWorkouts(
-    query: WorkoutQuery
-  ): Promise<Workout[]>;
+  getWorkouts(query: WorkoutQuery): Promise<Workout[]>
 
-  saveWorkout(
-    workout: {
-      activityType: WorkoutActivityType;
-      startDate: string;
-      endDate: string;
-      totalEnergyBurned?: number;
-      totalDistance?: number;
-      metadata?: WorkoutMetadata;
-    }
-  ): Promise<boolean>;
+  saveWorkout(workout: {
+    activityType: WorkoutActivityType
+    startDate: string
+    endDate: string
+    totalEnergyBurned?: number
+    totalDistance?: number
+    metadata?: WorkoutMetadata
+  }): Promise<boolean>
 }
 
 export interface WorkoutQuery {
-  startDate?: string;
-  endDate?: string;
-  activityTypes?: number[];
-  ids?: string[];
-  limit?: number;
-  isUserEntered?: boolean;
+  startDate?: string
+  endDate?: string
+  activityTypes?: number[]
+  ids?: string[]
+  limit?: number
+  isUserEntered?: boolean
 }
 
 export interface Workout {
-  id: string;
-  startDate: string;
-  endDate: string;
-  activityType: WorkoutActivityType;
-  duration: number;
+  id: string
+  startDate: string
+  endDate: string
+  activityType: WorkoutActivityType
+  duration: number
 }
 
 export interface QuantitySamplesQuery {
-  type: HealthType;
-  startDate?: string;
-  endDate?: string;
-  isUserEntered?: boolean;
-  unit: HealthUnit | string;
-  limit?: number;
-  ids?: string[];
+  type: HealthType
+  startDate?: string
+  endDate?: string
+  isUserEntered?: boolean
+  unit: HealthUnit | string
+  limit?: number
+  ids?: string[]
 }
 
 export interface QuantitySample {
-  startDate: string;
-  endDate: string;
-  value: number;
-  unit?: HealthUnit | string;
-  metadata?: Object;
+  startDate: string
+  endDate: string
+  value: number
+  unit?: HealthUnit | string
+  metadata?: Object
 }
 
 export interface QuantitySamplesStatisticsQuery {
-  type: HealthType;
-  startDate: string;
-  endDate: string;
-  interval?: Interval;
-  anchorDate?: string;
-  unit: HealthUnit | string;
-  option: StatisticsOption;
+  type: HealthType
+  startDate: string
+  endDate: string
+  interval?: Interval
+  anchorDate?: string
+  unit: HealthUnit | string
+  option: StatisticsOption
 }
 
 export interface QuantitySamplesStatistics {
-  startDate: string;
-  endDate: string;
-  value: number;
+  startDate: string
+  endDate: string
+  value: number
 }
 
 export enum Interval {
@@ -374,42 +362,42 @@ export enum WorkoutActivityType {
   DiscSports = 75,
   FitnessGaming = 76,
   CardioDance = 77,
-  SocialDance = 78,    // Dances done in social settings like swing, salsa and folk dances from different world regions.
+  SocialDance = 78, // Dances done in social settings like swing, salsa and folk dances from different world regions.
   Pickleball = 79,
-  Cooldown = 80,    // Low intensity stretching and mobility exercises following a more vigorous workout type
+  Cooldown = 80, // Low intensity stretching and mobility exercises following a more vigorous workout type
   SwimBikeRun = 81,
   Transition = 82,
   Other = 3000,
 }
 
 export enum WorkoutMetadataKey {
-  ActivityType = "HKActivityType",
-  AppleFitnessPlusSession = "HKAppleFitnessPlusSession",
-  CoachedWorkout = "HKCoachedWorkout",
-  GroupFitness = "HKGroupFitness",
-  IndoorWorkout = "HKIndoorWorkout",
-  WorkoutBrandName = "HKWorkoutBrandName",
-  CyclingFunctionalThresholdPowerTestType = "HKCyclingFunctionalThresholdPowerTestType",
-  FitnessMachineDuration = "HKFitnessMachineDuration",
-  CrossTrainerDistance = "HKCrossTrainerDistance",
-  IndoorBikeDistance = "HKIndoorBikeDistance",
-  AverageMETs = "HKAverageMETs",
-  PhysicalEffortEstimationType = "HKPhysicalEffortEstimationType",
-  AlpineSlopeGrade = "HKAlpineSlopeGrade",
-  ElevationAscended = "HKElevationAscended",
-  ElevationDescended = "HKElevationDescended",
-  AverageSpeed = "HKAverageSpeed",
-  MaximumSpeed = "HKMaximumSpeed",
-  SwimmingLocationType = "HKSwimmingLocationType",
-  SwimmingStrokeStyle = "HKSwimmingStrokeStyle",
-  LapLength = "HKLapLength",
-  SWOLFScore = "HKSWOLFScore",
-  WaterSalinity = "HKWaterSalinity",
+  ActivityType = 'HKActivityType',
+  AppleFitnessPlusSession = 'HKAppleFitnessPlusSession',
+  CoachedWorkout = 'HKCoachedWorkout',
+  GroupFitness = 'HKGroupFitness',
+  IndoorWorkout = 'HKIndoorWorkout',
+  WorkoutBrandName = 'HKWorkoutBrandName',
+  CyclingFunctionalThresholdPowerTestType = 'HKCyclingFunctionalThresholdPowerTestType',
+  FitnessMachineDuration = 'HKFitnessMachineDuration',
+  CrossTrainerDistance = 'HKCrossTrainerDistance',
+  IndoorBikeDistance = 'HKIndoorBikeDistance',
+  AverageMETs = 'HKAverageMETs',
+  PhysicalEffortEstimationType = 'HKPhysicalEffortEstimationType',
+  AlpineSlopeGrade = 'HKAlpineSlopeGrade',
+  ElevationAscended = 'HKElevationAscended',
+  ElevationDescended = 'HKElevationDescended',
+  AverageSpeed = 'HKAverageSpeed',
+  MaximumSpeed = 'HKMaximumSpeed',
+  SwimmingLocationType = 'HKSwimmingLocationType',
+  SwimmingStrokeStyle = 'HKSwimmingStrokeStyle',
+  LapLength = 'HKLapLength',
+  SWOLFScore = 'HKSWOLFScore',
+  WaterSalinity = 'HKWaterSalinity',
 }
 
 export type QuantityType = {
-  unit: HealthUnit | string;
-  doubleValue: number;
+  unit: HealthUnit | string
+  doubleValue: number
 }
 
 export enum WaterSalinityType {
@@ -418,29 +406,29 @@ export enum WaterSalinityType {
 }
 
 export type WorkoutMetadata = {
-    // [WorkoutMetadataKey.ActivityType]?: string; // ?
-    // [WorkoutMetadataKey.AppleFitnessPlusSession]?: string; // ?
-    [WorkoutMetadataKey.CoachedWorkout]?: boolean;
-    [WorkoutMetadataKey.GroupFitness]?: boolean;
-    [WorkoutMetadataKey.IndoorWorkout]?: boolean;
-    [WorkoutMetadataKey.WorkoutBrandName]?: string;  
-    // [WorkoutMetadataKey.CyclingFunctionalThresholdPowerTestType]?: string; // ?
-    [WorkoutMetadataKey.FitnessMachineDuration]?: QuantityType;
-    [WorkoutMetadataKey.CrossTrainerDistance]?: QuantityType;
-    [WorkoutMetadataKey.IndoorBikeDistance]?: QuantityType;
-    [WorkoutMetadataKey.AverageMETs]?: QuantityType;
-    // [WorkoutMetadataKey.PhysicalEffortEstimationType]?: string; // ?
-    [WorkoutMetadataKey.AlpineSlopeGrade]?: QuantityType;
-    [WorkoutMetadataKey.ElevationAscended]?: QuantityType;
-    [WorkoutMetadataKey.ElevationDescended]?: QuantityType;
-    [WorkoutMetadataKey.AverageSpeed]?: QuantityType;
-    [WorkoutMetadataKey.MaximumSpeed]?: QuantityType;
-    [WorkoutMetadataKey.SwimmingLocationType]?: number;
-    [WorkoutMetadataKey.SwimmingStrokeStyle]?: number;
-    [WorkoutMetadataKey.LapLength]?: QuantityType;
-    // [WorkoutMetadataKey.SWOLFScore]?: string; // ?
-    [WorkoutMetadataKey.WaterSalinity]?: WaterSalinityType;
-};
+  // [WorkoutMetadataKey.ActivityType]?: string; // ?
+  // [WorkoutMetadataKey.AppleFitnessPlusSession]?: string; // ?
+  [WorkoutMetadataKey.CoachedWorkout]?: boolean
+  [WorkoutMetadataKey.GroupFitness]?: boolean
+  [WorkoutMetadataKey.IndoorWorkout]?: boolean
+  [WorkoutMetadataKey.WorkoutBrandName]?: string
+  // [WorkoutMetadataKey.CyclingFunctionalThresholdPowerTestType]?: string; // ?
+  [WorkoutMetadataKey.FitnessMachineDuration]?: QuantityType
+  [WorkoutMetadataKey.CrossTrainerDistance]?: QuantityType
+  [WorkoutMetadataKey.IndoorBikeDistance]?: QuantityType
+  [WorkoutMetadataKey.AverageMETs]?: QuantityType
+  // [WorkoutMetadataKey.PhysicalEffortEstimationType]?: string; // ?
+  [WorkoutMetadataKey.AlpineSlopeGrade]?: QuantityType
+  [WorkoutMetadataKey.ElevationAscended]?: QuantityType
+  [WorkoutMetadataKey.ElevationDescended]?: QuantityType
+  [WorkoutMetadataKey.AverageSpeed]?: QuantityType
+  [WorkoutMetadataKey.MaximumSpeed]?: QuantityType
+  [WorkoutMetadataKey.SwimmingLocationType]?: number
+  [WorkoutMetadataKey.SwimmingStrokeStyle]?: number
+  [WorkoutMetadataKey.LapLength]?: QuantityType
+  // [WorkoutMetadataKey.SWOLFScore]?: string; // ?
+  [WorkoutMetadataKey.WaterSalinity]?: WaterSalinityType
+}
 
 // Reference:
 // https://developer.apple.com/documentation/healthkit/hkworkout/workout_metadata_keys

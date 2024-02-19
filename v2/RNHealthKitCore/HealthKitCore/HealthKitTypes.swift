@@ -29,6 +29,7 @@ public enum QuantityType: String, HealthKitType {
     case ForcedExpiratoryVolume1
     case ForcedVitalCapacity
     case HeartRate
+    case Electrocardiogram
     case HeartRateVariabilitySDNN
     case Height
     case LeanBodyMass
