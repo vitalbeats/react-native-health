@@ -14,6 +14,13 @@ interface RNHealthKit {
 
   getWorkouts(query: WorkoutQuery): Promise<Workout[]>
 
+  isAvailable(callback: (error: Object, results: boolean) => void): void
+
+  getSixMinuteWalkTestDistance(
+    options: HealthUnitOptions,
+    callback: (err: string, results: HealthValue) => void,
+  ): void
+
   saveWorkout(workout: {
     activityType: WorkoutActivityType
     startDate: string
@@ -22,6 +29,61 @@ interface RNHealthKit {
     totalDistance?: number
     metadata?: WorkoutMetadata
   }): Promise<boolean>
+}
+
+export enum BloodGlucoseMealTime {
+  Preprandial = 1,
+  Postprandial = 2,
+}
+
+export interface RecordMetadata {
+  HKBloodGlucoseMealTime?: BloodGlucoseMealTime
+  HKWasUserEntered?: boolean
+  [key: string]: string | number | boolean | undefined
+}
+
+interface BaseValue {
+  id?: string
+  startDate: string
+  endDate: string
+  metadata?: RecordMetadata
+}
+export interface HealthValue extends BaseValue {
+  value: number
+}
+
+export enum HealthObserver {
+  AllergyRecord = 'AllergyRecord',
+  ConditionRecord = 'ConditionRecord',
+  CoverageRecord = 'CoverageRecord',
+  Cycling = 'Cycling',
+  HeartRate = 'HeartRate',
+  ImmunizationRecord = 'ImmunizationRecord',
+  LabResultRecord = 'LabResultRecord',
+  MedicationRecord = 'MedicationRecord',
+  ProcedureRecord = 'ProcedureRecord',
+  RestingHeartRate = 'RestingHeartRate',
+  Running = 'Running',
+  StairClimbing = 'StairClimbing',
+  VitalSignRecord = 'VitalSignRecord',
+  Walking = 'Walking',
+  Workout = 'Workout',
+}
+
+export interface HealthUnitOptions {
+  unit?: HealthUnit
+}
+
+export interface HealthInputOptions extends HealthUnitOptions {
+  startDate?: string
+  endDate?: string
+  limit?: number
+  ascending?: boolean
+  type?: HealthObserver
+  date?: string
+  includeManuallyAdded?: boolean
+  period?: number
+  anchor?: string
 }
 
 export interface WorkoutQuery {
